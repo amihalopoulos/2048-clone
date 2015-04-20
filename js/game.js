@@ -78,22 +78,110 @@ Game.prototype.move = function(dir) {
        if (x != 3 && self.board[x + 1][y] == 0) {
         self.board[x + 1][y] = self.board[x][y]
         self.board[x][y] = 0
+          if (x - 1 > 0 && self.board[x -1][y] != 0){
+            self.board[x][y] = self.board[x-1][y]
+            self.board[x-1][y] = 0
+          }
+          if (x - 2 > 0 && self.board[x -2][y] != 0){
+            self.board[x][y] = self.board[x-2][y]
+            self.board[x-2][y] = 0
+          }
+          if (x - 3 > 0 && self.board[x -3][y] != 0){
+            self.board[x][y] = self.board[x-3][y]
+            self.board[x-3][y] = 0
+          }
         } else if (x != 3 && self.board[x + 1][y] == self.board[x][y]) {
           self.board[x + 1][y] = self.board[x][y] * 2
           self.board[x][y] = 0
+            if (x - 1 > 0 && self.board[x -1][y] != 0){
+              self.board[x][y] = self.board[x-1][y]
+              self.board[x-1][y] = 0
+            }
+            if (x - 2 > 0 && self.board[x -2][y] != 0){
+              self.board[x][y] = self.board[x-2][y]
+              self.board[x-2][y] = 0
+            }
+            if (x - 3 > 0 && self.board[x -3][y] != 0){
+              self.board[x][y] = self.board[x-3][y]
+              self.board[x-3][y] = 0
+            }
         }
       }
     }
       break;
     case 'right':
-      if (y != 3) {
-
-      };
+    for (var x = 0; x < self.board.length; x++) {
+      for (var y = 0; y < 4; y++) {
+       if (y != 3 && self.board[x][y + 1] == 0) {
+        self.board[x][y + 1] = self.board[x][y]
+        self.board[x][y] = 0
+          if (y-1 > 0 && self.board[x][y-1] != 0){
+            self.board[x][y] = self.board[x][y-1]
+            self.board[x][y-1] = 0
+          }
+          if (y-2 > 0 && self.board[x][y-2] != 0){
+            self.board[x][y] = self.board[x][y-2]
+            self.board[x][y-2] = 0
+          }
+          if (y - 3 > 0 && self.board[x][y-3] != 0){
+            self.board[x][y] = self.board[x][y-3]
+            self.board[x][y-3] = 0
+          }
+        } else if (y != 3 && self.board[x][y+1] == self.board[x][y]) {
+          self.board[x][y+1] = self.board[x][y] * 2
+          self.board[x][y] = 0
+            if (y-1 > 0 && self.board[x][y-1] != 0){
+              self.board[x][y] = self.board[x][y-1]
+              self.board[x][y-1] = 0
+            }
+            if (y-2 > 0 && self.board[x][y-2] != 0){
+              self.board[x][y] = self.board[x][y-2]
+              self.board[x][y-2] = 0
+            }
+            if (y-3 > 0 && self.board[x][y-3] != 0){
+              self.board[x][y] = self.board[x][y-3]
+              self.board[x][y-3] = 0
+            }
+        }
+      }
+    }
       break;
     case 'left':
-      if (y != 0) {
-
-      };
+    for (var x = self.board.length - 1; x >= 0; x--) {
+        for (var y = 3; y >= 0; y--) {
+       if (y != 3 && self.board[x][y-1] == 0) {
+        self.board[x][y-1] = self.board[x][y]
+        self.board[x][y] = 0
+          if (y+1 < 4 && self.board[x][y+1] != 0){
+            self.board[x][y] = self.board[x][y+1]
+            self.board[x][y+1] = 0
+          }
+          if (y+2 < 4 && self.board[x][y+2] != 0){
+            self.board[x][y] = self.board[x][y+2]
+            self.board[x][y+2] = 0
+          }
+          if (y+3 < 4 && self.board[x][y+3] != 0){
+            self.board[x][y] = self.board[x][y+3]
+            self.board[x][y+3] = 0
+          }
+        } else if (y != 3 && self.board[x][y+1] == self.board[x][y]) {
+          self.board[x][y+1] = self.board[x][y] * 2
+          self.board[x][y] = 0
+            if (y+1 < 4 && self.board[x][y+1] != 0){
+              self.board[x][y] = self.board[x][y+1]
+              self.board[x][y+1] = 0
+            }
+            if (y+2 < 4 && self.board[x][y+2] != 0){
+              self.board[x][y] = self.board[x][y+2]
+              self.board[x][y+2] = 0
+            }
+            if (y+3 < 4 && self.board[x][y+3] != 0){
+              self.board[x][y] = self.board[x][y+3]
+              self.board[x][y+3] = 0
+            }
+        }
+      }
+    }
       break;
 }
 }
