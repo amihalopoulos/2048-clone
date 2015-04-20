@@ -1,73 +1,112 @@
-function Cell(num, x, y) {
-  this.num = num
-  this.x = x
-  this.y = y
-  // this.empty = if (num === 0) {
-  //   this.empty = false
-  // } else {
-  //   this.empty? = true
-  // }
-}
-
-Cell.prototype.shift = function(dir) {
-  if (dir === 'up'){
-    this.y ++
-  } else if (dir === 'right'){
-    this.x ++
-  } else if (dir === 'down') {
-    this.y --
-  } else if (dir === 'left') {
-    this.x --
-  }
-}
 function Game(string) {
-  this.string = string || '0000202000000000'
-  this.cell
-  this.row
-  this.col
-  this.board = this.board()
+  this.string = string || '2024202040042082'
+  this.board = this.makeBoard()
 }
 
-Game.prototype.board = function() {
-  var row1 = []
-  var row2 = []
-  var row3 = []
-  var row4 = []
-  this.board = [row1, row2, row3, row4]
+Game.prototype.makeBoard = function() {
+  this.row1 = []
+  this.row2 = []
+  this.row3 = []
+  this.row4 = []
+  var nestArray = [this.row1, this.row2, this.row3, this.row4]
   for (var i = 0; i <= this.string.length - 1; i++) {
     if (i < 4 ) {
-      var cell = new Cell(this.string[i], 0, i)
-      row1.push(cell)
-    } else if (i < 8) {
-      var cell = new Cell(this.string[i], 1, i % 4)
-      row2.push(cell)
+      this.row1.push(this.string[i])
+    }  else if (i < 8) {
+      this.row2.push(this.string[i])
     } else if (i < 12) {
-      var cell = new Cell(this.string[i], 2, i % 4)
-      row3.push(cell)
+      this.row3.push(this.string[i])
     } else {
-      var cell = new Cell(this.string[i], 3, i % 4)
-      row4.push(cell)
+      this.row4.push(this.string[i])
     }
   };
-  return this.board
+  return nestArray
 }
 
 Game.prototype.toString = function() {
   for (var i = 0; i < this.board.length; i++) {
-    var row = []
-    for (var x = 0; x < 4; x++) {
-      row.push(this.board[i][x].num)
-    };
-    console.log(row.join())
+    console.log(this.board[i].join(' '))
   };
 }
 
 Game.prototype.move = function(dir) {
-  for (var i = 0; i < this.board.length; i++) {
+  var self = this
+  switch(dir) {
+    case 'up':
+      for (var x = self.board.length - 1; x >= 0; x--) {
+        for (var y = 3; y >= 0; y--) {
+          if (x != 0 && self.board[x - 1][y] == 0) {
+            self.board[x - 1][y] = self.board[x][y]
+            self.board[x][y] = 0
+            if (x + 1 < 4 && self.board[x +1][y] != 0){
+              self.board[x][y] = self.board[x+1][y]
+              self.board[x+1][y] = 0
+            }
+            if (x + 2 < 4 && self.board[x +2][y] != 0){
+              self.board[x][y] = self.board[x+2][y]
+              self.board[x+2][y] = 0
+            }
+            if (x + 3 < 4 && self.board[x +3][y] != 0){
+              self.board[x][y] = self.board[x+3][y]
+              self.board[x+3][y] = 0
+            }
+          } else if (x != 0 && self.board[x - 1][y] == self.board[x][y]){
+              self.board[x - 1][y] = self.board[x][y] * 2
+              self.board[x][y] = 0
+            if (x + 1 < 4 && self.board[x +1][y] != 0){
+              self.board[x][y] = self.board[x+1][y]
+              self.board[x+1][y] = 0
+            }
+            if (x + 2 < 4 && self.board[x +2][y] != 0){
+              self.board[x][y] = self.board[x+2][y]
+              self.board[x+2][y] = 0
+            }
+            if (x + 3 < 4 && self.board[x +3][y] != 0){
+              self.board[x][y] = self.board[x+3][y]
+              self.board[x+3][y] = 0
+            }
+          } else if (x + 1 < 4 && self.board[x][y] == 0 && self.board[x + 1][y] != 0) {
+            self.board[x][y] = self.board[x + 1][y]
+            self.board[x + 1][y] = 0
+        }
+      }
+      }
+      break;
+    case 'down':
+    for (var x = 0; x < self.board.length; x++) {
+      for (var y = 0; y < 4; y++) {
+       if (x != 3 && self.board[x + 1][y] == 0) {
+        self.board[x + 1][y] = self.board[x][y]
+        self.board[x][y] = 0
+        } else if (x != 3 && self.board[x + 1][y] == self.board[x][y]) {
+          self.board[x + 1][y] = self.board[x][y] * 2
+          self.board[x][y] = 0
+        }
+      }
+    }
+      break;
+    case 'right':
+      if (y != 3) {
 
-  };
+      };
+      break;
+    case 'left':
+      if (y != 0) {
 
+      };
+      break;
+}
 }
 
-var game = new Game()
+
+game = new Game()
 console.log(game.toString())
+// game.move('up')
+// game.move('up')
+// console.log(game.toString())
+
+game.move('up')
+console.log(game.toString())
+
+
+//filter() --ashleys recommendation
