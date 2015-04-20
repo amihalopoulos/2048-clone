@@ -36,13 +36,17 @@ Game.prototype.board = function() {
   this.board = [row1, row2, row3, row4]
   for (var i = 0; i <= this.string.length - 1; i++) {
     if (i < 4 ) {
-      row1.push(this.string[i])
+      var cell = new Cell(this.string[i], 0, i)
+      row1.push(cell)
     } else if (i < 8) {
-      row2.push(this.string[i])
+      var cell = new Cell(this.string[i], 1, i % 4)
+      row2.push(cell)
     } else if (i < 12) {
-      row3.push(this.string[i])
+      var cell = new Cell(this.string[i], 2, i % 4)
+      row3.push(cell)
     } else {
-      row4.push(this.string[i])
+      var cell = new Cell(this.string[i], 3, i % 4)
+      row4.push(cell)
     }
   };
   return this.board
@@ -50,7 +54,11 @@ Game.prototype.board = function() {
 
 Game.prototype.toString = function() {
   for (var i = 0; i < this.board.length; i++) {
-    console.log(this.board[i].join())
+    var row = []
+    for (var x = 0; x < 4; x++) {
+      row.push(this.board[i][x].num)
+    };
+    console.log(row.join())
   };
 }
 
