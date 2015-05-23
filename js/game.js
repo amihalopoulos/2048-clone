@@ -29,172 +29,110 @@ Game.prototype.toString = function() {
   };
 }
 
+Game.prototype.toHtml = function() {
+  var string = "<table id='board'>"
+  for (var x=0; x<this.board.length; x++){
+    string += "<tr class='row'>"
+    for (var y=0; y<this.board.length;y++){
+      var num = ""
+      if (this.board[x][y] != 0) {
+        num = this.board[x][y]
+      }
+      string += "<td class='cell'>" + num + "</td>"
+    };
+    string += "</tr>"
+  };
+  string += "</table>"
+  return string
+}
+
+var spawnBlock = function(board) {
+  var nums = [2,4]
+  var ranDigit = Math.floor(Math.random()*4)
+  var ranDigitTwo = Math.floor(Math.random()*4)
+  if (board[ranDigit][ranDigitTwo] == 0) {
+    board[ranDigit][ranDigitTwo] = nums[Math.floor(Math.random()*2)]
+  } else {
+    spawnBlock(board)
+  }
+}
+
 Game.prototype.move = function(dir) {
   var self = this
   switch(dir) {
     case 'up':
-      for (var x = self.board.length - 1; x >= 0; x--) {
-        for (var y = 3; y >= 0; y--) {
-          if (x != 0 && self.board[x - 1][y] == 0) {
-            self.board[x - 1][y] = self.board[x][y]
-            self.board[x][y] = 0
-            if (x + 1 < 4 && self.board[x +1][y] != 0){
-              self.board[x][y] = self.board[x+1][y]
-              self.board[x+1][y] = 0
-            }
-            if (x + 2 < 4 && self.board[x +2][y] != 0){
-              self.board[x][y] = self.board[x+2][y]
-              self.board[x+2][y] = 0
-            }
-            if (x + 3 < 4 && self.board[x +3][y] != 0){
-              self.board[x][y] = self.board[x+3][y]
-              self.board[x+3][y] = 0
-            }
-          } else if (x != 0 && self.board[x - 1][y] == self.board[x][y]){
-              self.board[x - 1][y] = self.board[x][y] * 2
-              self.board[x][y] = 0
-            if (x + 1 < 4 && self.board[x +1][y] != 0){
-              self.board[x][y] = self.board[x+1][y]
-              self.board[x+1][y] = 0
-            }
-            if (x + 2 < 4 && self.board[x +2][y] != 0){
-              self.board[x][y] = self.board[x+2][y]
-              self.board[x+2][y] = 0
-            }
-            if (x + 3 < 4 && self.board[x +3][y] != 0){
-              self.board[x][y] = self.board[x+3][y]
-              self.board[x+3][y] = 0
-            }
-          } else if (x + 1 < 4 && self.board[x][y] == 0 && self.board[x + 1][y] != 0) {
-            self.board[x][y] = self.board[x + 1][y]
-            self.board[x + 1][y] = 0
+      var noZeroBoard = []
+      var transposedBoard = _.zip(self.board[0], self.board[1], self.board[2], self.board[3])
+      for (var x = 0; x <= 3; x++) {
+        var noZeros = transposedBoard[x].filter(function(x) { return x != 0; });
+        for (var z = 0; z <= noZeros.length; z++) {
+          if (noZeros[z+1] && noZeros[z] == noZeros[z+1]) {
+            noZeros[z+1] *= 2
+            noZeros.splice(z, 1)
+          }
         }
+        while (noZeros.length < 4) {
+          noZeros.push(0)
+        }
+        noZeroBoard.push(noZeros)
       }
-      }
+      this.board = _.zip(noZeroBoard[0], noZeroBoard[1], noZeroBoard[2], noZeroBoard[3])
+      spawnBlock(this.board)
       break;
     case 'down':
-    for (var x = 0; x < self.board.length; x++) {
-      for (var y = 0; y < 4; y++) {
-       if (x != 3 && self.board[x + 1][y] == 0) {
-        self.board[x + 1][y] = self.board[x][y]
-        self.board[x][y] = 0
-          if (x - 1 > 0 && self.board[x -1][y] != 0){
-            self.board[x][y] = self.board[x-1][y]
-            self.board[x-1][y] = 0
+      var noZeroBoard = []
+      var transposedBoard = _.zip(self.board[0].reverse(), self.board[1].reverse(), self.board[2].reverse(), self.board[3].reverse())
+      for (var x = 3; x >= 0; x--) {
+        var noZeros = transposedBoard[x].filter(function(x) { return x != 0; });
+        for (var z = 0; z <= noZeros.length; z++) {
+          if (noZeros[z+1] && noZeros[z] == noZeros[z+1]) {
+            noZeros[z+1] *= 2
+            noZeros.splice(z, 1)
           }
-          if (x - 2 > 0 && self.board[x -2][y] != 0){
-            self.board[x][y] = self.board[x-2][y]
-            self.board[x-2][y] = 0
-          }
-          if (x - 3 > 0 && self.board[x -3][y] != 0){
-            self.board[x][y] = self.board[x-3][y]
-            self.board[x-3][y] = 0
-          }
-        } else if (x != 3 && self.board[x + 1][y] == self.board[x][y]) {
-          self.board[x + 1][y] = self.board[x][y] * 2
-          self.board[x][y] = 0
-            if (x - 1 > 0 && self.board[x -1][y] != 0){
-              self.board[x][y] = self.board[x-1][y]
-              self.board[x-1][y] = 0
-            }
-            if (x - 2 > 0 && self.board[x -2][y] != 0){
-              self.board[x][y] = self.board[x-2][y]
-              self.board[x-2][y] = 0
-            }
-            if (x - 3 > 0 && self.board[x -3][y] != 0){
-              self.board[x][y] = self.board[x-3][y]
-              self.board[x-3][y] = 0
-            }
         }
+        while (noZeros.length < 4) {
+          noZeros.unshift(0)
+        }
+        noZeroBoard.push(noZeros)
       }
-    }
+      this.board = _.zip(noZeroBoard[0], noZeroBoard[1], noZeroBoard[2], noZeroBoard[3])
+      spawnBlock(this.board)
       break;
     case 'right':
-    for (var x = 0; x < self.board.length; x++) {
-      for (var y = 0; y < 4; y++) {
-       if (y != 3 && self.board[x][y + 1] == 0) {
-        self.board[x][y + 1] = self.board[x][y]
-        self.board[x][y] = 0
-          if (y-1 > 0 && self.board[x][y-1] != 0){
-            self.board[x][y] = self.board[x][y-1]
-            self.board[x][y-1] = 0
+      var noZeroBoard = []
+      for (var x = 0; x <= 3; x++) {
+        var noZeros = this.board[x].filter(function(x) { return x != 0; });
+        for (var z = 0; z <= noZeros.length; z++) {
+          if (noZeros[z+1] && noZeros[z] == noZeros[z+1]) {
+            noZeros[z+1] *= 2
+            noZeros.splice(z, 1)
           }
-          if (y-2 > 0 && self.board[x][y-2] != 0){
-            self.board[x][y] = self.board[x][y-2]
-            self.board[x][y-2] = 0
-          }
-          if (y - 3 > 0 && self.board[x][y-3] != 0){
-            self.board[x][y] = self.board[x][y-3]
-            self.board[x][y-3] = 0
-          }
-        } else if (y != 3 && self.board[x][y+1] == self.board[x][y]) {
-          self.board[x][y+1] = self.board[x][y] * 2
-          self.board[x][y] = 0
-            if (y-1 > 0 && self.board[x][y-1] != 0){
-              self.board[x][y] = self.board[x][y-1]
-              self.board[x][y-1] = 0
-            }
-            if (y-2 > 0 && self.board[x][y-2] != 0){
-              self.board[x][y] = self.board[x][y-2]
-              self.board[x][y-2] = 0
-            }
-            if (y-3 > 0 && self.board[x][y-3] != 0){
-              self.board[x][y] = self.board[x][y-3]
-              self.board[x][y-3] = 0
-            }
         }
+        while (noZeros.length < 4) {
+          noZeros.unshift(0)
+        }
+        noZeroBoard.push(noZeros)
       }
-    }
+      this.board = noZeroBoard
+      spawnBlock(this.board)
       break;
     case 'left':
-    for (var x = self.board.length - 1; x >= 0; x--) {
-        for (var y = 3; y >= 0; y--) {
-       if (y != 3 && self.board[x][y-1] == 0) {
-        self.board[x][y-1] = self.board[x][y]
-        self.board[x][y] = 0
-          if (y+1 < 4 && self.board[x][y+1] != 0){
-            self.board[x][y] = self.board[x][y+1]
-            self.board[x][y+1] = 0
+      var noZeroBoard = []
+      for (var x = 0; x <= 3; x++) {
+        var noZeros = this.board[x].filter(function(x) { return x != 0; });
+        for (var z = 0; z <= noZeros.length; z++) {
+          if (noZeros[z+1] && noZeros[z] == noZeros[z+1]) {
+            noZeros[z+1] *= 2
+            noZeros.splice(z, 1)
           }
-          if (y+2 < 4 && self.board[x][y+2] != 0){
-            self.board[x][y] = self.board[x][y+2]
-            self.board[x][y+2] = 0
-          }
-          if (y+3 < 4 && self.board[x][y+3] != 0){
-            self.board[x][y] = self.board[x][y+3]
-            self.board[x][y+3] = 0
-          }
-        } else if (y != 3 && self.board[x][y+1] == self.board[x][y]) {
-          self.board[x][y+1] = self.board[x][y] * 2
-          self.board[x][y] = 0
-            if (y+1 < 4 && self.board[x][y+1] != 0){
-              self.board[x][y] = self.board[x][y+1]
-              self.board[x][y+1] = 0
-            }
-            if (y+2 < 4 && self.board[x][y+2] != 0){
-              self.board[x][y] = self.board[x][y+2]
-              self.board[x][y+2] = 0
-            }
-            if (y+3 < 4 && self.board[x][y+3] != 0){
-              self.board[x][y] = self.board[x][y+3]
-              self.board[x][y+3] = 0
-            }
         }
+        while (noZeros.length < 4) {
+          noZeros.push(0)
+        }
+        noZeroBoard.push(noZeros)
       }
-    }
+      this.board = noZeroBoard
+      spawnBlock(this.board)
       break;
+  }
 }
-}
-
-
-game = new Game()
-console.log(game.toString())
-// game.move('up')
-// game.move('up')
-// console.log(game.toString())
-
-game.move('up')
-console.log(game.toString())
-
-
-//filter() --ashleys recommendation
