@@ -1,0 +1,13 @@
+table {
+  margin: auto;
+  width: 400px;
+  height: 400px;
+  table-layout: fixed;
+}
+
+td {
+  background-color: yellow;
+  font-size: 3em;
+  font-weight: 2;
+  text-align: center;
+}
