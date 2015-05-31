@@ -77,22 +77,26 @@ Game.prototype.move = function(dir) {
     case 'up':
       var transposedBoard = _.zip(self.board[0], self.board[1], self.board[2], self.board[3])
       var newBoard = shiftBoard(transposedBoard, "right")
+      var oldBoard = this.board
       this.board = _.zip(newBoard[0], newBoard[1], newBoard[2], newBoard[3])
-      spawnBlock(this.board)
+      if (oldBoard.join('') !== this.board.join('')) {spawnBlock(this.board)};
       break;
     case 'down':
       var transposedBoard = _.zip(self.board[0], self.board[1], self.board[2], self.board[3])
       var newBoard = shiftBoard(transposedBoard, "left")
+      var oldBoard = this.board
       this.board = _.zip(newBoard[0], newBoard[1], newBoard[2], newBoard[3])
-      spawnBlock(this.board)
+      if (oldBoard.join('') !== this.board.join('')) {spawnBlock(this.board)};
       break;
     case 'right':
+      var oldBoard = this.board
       this.board = shiftBoard(this.board, "left")
-      spawnBlock(this.board)
+      if (oldBoard.join('') !== this.board.join('')) {spawnBlock(this.board)};
       break;
     case 'left':
+      var oldBoard = this.board
       this.board = shiftBoard(this.board, "right")
-      spawnBlock(this.board)
+      if (oldBoard.join('') !== this.board.join('')) {spawnBlock(this.board)};
       break;
   }
 }
