@@ -45,13 +45,15 @@ Game.prototype.toHtml = function() {
       if (this.board[x][y] != 0) {
         num = this.board[x][y]
       }
-      string += "<td class='cell'>" + num + "</td>"
+      string += "<td class='cell " + numToWords[num] + "'>" + num + "</td>"
     };
     string += "</tr>"
   };
   string += "</table>"
   return string
 }
+
+var numToWords = {2: "two", 4: "four", 8: "eight", 16: "sixteen", 32: "thirty-two", 64: "sixty-four", 128: "one-two-eight", 256: "two-five-six", 512: "five-one-two", 1024: "ten-two-four", 2048: "twenty"}
 
 var spawnBlock = function(board) {
   var nums = [2,4]
