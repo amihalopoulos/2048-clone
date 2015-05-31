@@ -101,14 +101,16 @@ Game.prototype.move = function(dir) {
   }
 }
 
-var findAndCombineNumbers = function(row){
+var findAndCombineNumbers = function(row, dir){
   var newRow = row.filter(function(x) { return x != 0; })
+  if (dir === "left") {newRow = newRow.reverse()}
   for (var z = 0; z <= newRow.length; z++) {
     if (newRow[z+1] && newRow[z] == newRow[z+1]) {
       newRow[z+1] *= 2
       newRow.splice(z, 1)
     }
   }
+  if (dir === "left") {newRow = newRow.reverse()}
   return newRow
 }
 
@@ -124,7 +126,7 @@ var addZeroes = function(row, dir) {
 var shiftBoard = function(board, dir) {
   var noZeroBoard = []
   for (var x = 0; x < board.length; x++) {
-    var noZeros = findAndCombineNumbers(board[x])
+    var noZeros = findAndCombineNumbers(board[x], dir)
     noZeroBoard.push(addZeroes(noZeros, dir))
   }
   return noZeroBoard
