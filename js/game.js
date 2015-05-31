@@ -1,6 +1,13 @@
 function Game(string) {
-  this.string = string || '2024202040042082'
+  this.string = generateString()
   this.board = this.makeBoard()
+}
+
+var generateString = function() {
+  var string = '0000000000000000'
+  var randNum = Math.floor((Math.random() * 15) + 2)
+  var output = [string.slice(0, randNum-1), 2, string.slice(randNum)].join('')
+  return output
 }
 
 Game.prototype.makeBoard = function() {
@@ -57,82 +64,70 @@ var spawnBlock = function(board) {
   }
 }
 
+Game.prototype.checkForMovement = function() {
+  //What to check for?
+  //has to occur before move is made
+  //has to check if that dir will move those pieces
+  //specifically, check each non-zero on the board and see if there is a single '0' or non out-of-bounds in that dir.
+}
+
 Game.prototype.move = function(dir) {
   var self = this
   switch(dir) {
     case 'up':
-      var noZeroBoard = []
       var transposedBoard = _.zip(self.board[0], self.board[1], self.board[2], self.board[3])
-      for (var x = 0; x <= 3; x++) {
-        var noZeros = transposedBoard[x].filter(function(x) { return x != 0; });
-        for (var z = 0; z <= noZeros.length; z++) {
-          if (noZeros[z+1] && noZeros[z] == noZeros[z+1]) {
-            noZeros[z+1] *= 2
-            noZeros.splice(z, 1)
-          }
-        }
-        while (noZeros.length < 4) {
-          noZeros.push(0)
-        }
-        noZeroBoard.push(noZeros)
-      }
-      this.board = _.zip(noZeroBoard[0], noZeroBoard[1], noZeroBoard[2], noZeroBoard[3])
-      spawnBlock(this.board)
+      var newBoard = shiftBoard(transposedBoard, "right")
+      var oldBoard = this.board
+      this.board = _.zip(newBoard[0], newBoard[1], newBoard[2], newBoard[3])
+      if (oldBoard.join('') !== this.board.join('')) {spawnBlock(this.board)};
       break;
     case 'down':
-      var noZeroBoard = []
-      var transposedBoard = _.zip(self.board[0].reverse(), self.board[1].reverse(), self.board[2].reverse(), self.board[3].reverse())
-      for (var x = 3; x >= 0; x--) {
-        var noZeros = transposedBoard[x].filter(function(x) { return x != 0; });
-        for (var z = 0; z <= noZeros.length; z++) {
-          if (noZeros[z+1] && noZeros[z] == noZeros[z+1]) {
-            noZeros[z+1] *= 2
-            noZeros.splice(z, 1)
-          }
-        }
-        while (noZeros.length < 4) {
-          noZeros.unshift(0)
-        }
-        noZeroBoard.push(noZeros)
-      }
-      this.board = _.zip(noZeroBoard[0], noZeroBoard[1], noZeroBoard[2], noZeroBoard[3])
-      spawnBlock(this.board)
+      var transposedBoard = _.zip(self.board[0], self.board[1], self.board[2], self.board[3])
+      var newBoard = shiftBoard(transposedBoard, "left")
+      var oldBoard = this.board
+      this.board = _.zip(newBoard[0], newBoard[1], newBoard[2], newBoard[3])
+      if (oldBoard.join('') !== this.board.join('')) {spawnBlock(this.board)};
       break;
     case 'right':
-      var noZeroBoard = []
-      for (var x = 0; x <= 3; x++) {
-        var noZeros = this.board[x].filter(function(x) { return x != 0; });
-        for (var z = 0; z <= noZeros.length; z++) {
-          if (noZeros[z+1] && noZeros[z] == noZeros[z+1]) {
-            noZeros[z+1] *= 2
-            noZeros.splice(z, 1)
-          }
-        }
-        while (noZeros.length < 4) {
-          noZeros.unshift(0)
-        }
-        noZeroBoard.push(noZeros)
-      }
-      this.board = noZeroBoard
-      spawnBlock(this.board)
+      var oldBoard = this.board
+      this.board = shiftBoard(this.board, "left")
+      if (oldBoard.join('') !== this.board.join('')) {spawnBlock(this.board)};
       break;
     case 'left':
-      var noZeroBoard = []
-      for (var x = 0; x <= 3; x++) {
-        var noZeros = this.board[x].filter(function(x) { return x != 0; });
-        for (var z = 0; z <= noZeros.length; z++) {
-          if (noZeros[z+1] && noZeros[z] == noZeros[z+1]) {
-            noZeros[z+1] *= 2
-            noZeros.splice(z, 1)
-          }
-        }
-        while (noZeros.length < 4) {
-          noZeros.push(0)
-        }
-        noZeroBoard.push(noZeros)
-      }
-      this.board = noZeroBoard
-      spawnBlock(this.board)
+      var oldBoard = this.board
+      this.board = shiftBoard(this.board, "right")
+      if (oldBoard.join('') !== this.board.join('')) {spawnBlock(this.board)};
       break;
   }
+}
+
+var findAndCombineNumbers = function(row, dir){
+  var newRow = row.filter(function(x) { return x != 0; })
+  if (dir === "left") {newRow = newRow.reverse()}
+  for (var z = 0; z <= newRow.length; z++) {
+    if (newRow[z+1] && newRow[z] == newRow[z+1]) {
+      newRow[z+1] *= 2
+      newRow.splice(z, 1)
+    }
+  }
+  if (dir === "left") {newRow = newRow.reverse()}
+  return newRow
+}
+
+var addZeroes = function(row, dir) {
+  if (dir === "right") {
+    while (row.length < 4) {row.push(0)}
+  } else if (dir === "left") {
+    while (row.length < 4) {row.unshift(0)}
+  }
+  return row
+}
+
+var shiftBoard = function(board, dir) {
+  var noZeroBoard = []
+  for (var x = 0; x < board.length; x++) {
+    var noZeros = findAndCombineNumbers(board[x], dir)
+    noZeroBoard.push(addZeroes(noZeros, dir))
+  }
+  return noZeroBoard
 }
