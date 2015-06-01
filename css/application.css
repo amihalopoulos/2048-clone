@@ -6,6 +6,25 @@ table {
   table-layout: fixed;
 }
 
+#jumbotron {
+  width: 200px;
+  height: 130px;
+  margin: auto;
+  margin-top: 20px;
+  color: black;
+  text-align: center;
+  font-size: 3em;
+  font-family: 'Montserrat', sans-serif;
+  background-color: #FF6633;
+  border:1px solid #ccc;
+  border-bottom:2px solid #bbb;
+  border-top:1px solid #ddd;
+  border-radius:10px;
+}
+#scoreboard {
+  background-color: #FFFFFF;
+}
+
 td {
   font-family: 'Montserrat', sans-serif;
   border: 1px solid black;
