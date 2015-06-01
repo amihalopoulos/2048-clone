@@ -53,8 +53,6 @@ Game.prototype.toHtml = function() {
   return string
 }
 
-var numToWords = {2: "two", 4: "four", 8: "eight", 16: "sixteen", 32: "thirty-two", 64: "sixty-four", 128: "one-two-eight", 256: "two-five-six", 512: "five-one-two", 1024: "ten-two-four", 2048: "twenty"}
-
 var spawnBlock = function(board) {
   var nums = [2,4]
   var ranDigit = Math.floor(Math.random()*4)
@@ -64,13 +62,6 @@ var spawnBlock = function(board) {
   } else {
     spawnBlock(board)
   }
-}
-
-Game.prototype.checkForMovement = function() {
-  //What to check for?
-  //has to occur before move is made
-  //has to check if that dir will move those pieces
-  //specifically, check each non-zero on the board and see if there is a single '0' or non out-of-bounds in that dir.
 }
 
 Game.prototype.move = function(dir) {
@@ -109,11 +100,18 @@ var findAndCombineNumbers = function(row, dir){
   for (var z = 0; z <= newRow.length; z++) {
     if (newRow[z+1] && newRow[z] == newRow[z+1]) {
       newRow[z+1] *= 2
+      adjustScore(newRow[z+1])
       newRow.splice(z, 1)
     }
   }
   if (dir === "left") {newRow = newRow.reverse()}
   return newRow
+}
+
+var adjustScore = function(num) {
+  var score = parseInt($('#scoreboard').text())
+  var newScore = score + num
+  $('#scoreboard').html(newScore)
 }
 
 var addZeroes = function(row, dir) {
@@ -133,3 +131,5 @@ var shiftBoard = function(board, dir) {
   }
   return noZeroBoard
 }
+
+var numToWords = {2: "two", 4: "four", 8: "eight", 16: "sixteen", 32: "thirty-two", 64: "sixty-four", 128: "one-two-eight", 256: "two-five-six", 512: "five-one-two", 1024: "ten-two-four", 2048: "twenty"}
