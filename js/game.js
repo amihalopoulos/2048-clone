@@ -65,19 +65,17 @@ var spawnBlock = function(board) {
 }
 
 Game.prototype.move = function(dir) {
-  var self = this
+  var transposedBoard = _.zip(this.board[0], this.board[1], this.board[2], this.board[3])
+  var oldBoard = this.board
+
   switch(dir) {
     case 'up':
-      var transposedBoard = _.zip(self.board[0], self.board[1], self.board[2], self.board[3])
       var newBoard = shiftBoard(transposedBoard, "right")
-      var oldBoard = this.board
       this.board = _.zip(newBoard[0], newBoard[1], newBoard[2], newBoard[3])
       if (oldBoard.join('') !== this.board.join('')) {spawnBlock(this.board)};
       break;
     case 'down':
-      var transposedBoard = _.zip(self.board[0], self.board[1], self.board[2], self.board[3])
       var newBoard = shiftBoard(transposedBoard, "left")
-      var oldBoard = this.board
       this.board = _.zip(newBoard[0], newBoard[1], newBoard[2], newBoard[3])
       if (oldBoard.join('') !== this.board.join('')) {spawnBlock(this.board)};
       break;
